@@ -2,6 +2,7 @@ const BG = "#b0db43"
 const APPLE = "#db2763"
 const SNAKE = "#0e131f"
 const MY_SNAKE = "#7CD1D4"
+const DEFAULT = "#464e32";
 
 bg_music = new Howl({ src: '/static/audio/bg.mp3', volume: 0.1, loop: true })
 
@@ -44,7 +45,7 @@ class Game {
         score.innerHTML = "";
 
         players.forEach(p => {
-            p.id === playerId ? ctx.fillStyle = MY_SNAKE : ctx.fillStyle = SNAKE;
+            ctx.fillStyle = p.color;
             ctx.fillRect(p.x * cellSize, p.y * cellSize, cellSize, cellSize)
             p.tail.forEach((t) => {
                 ctx.fillRect(t.x * cellSize, t.y * cellSize, cellSize, cellSize);
@@ -53,10 +54,7 @@ class Game {
             const tag = document.createElement('span');
             tag.innerText = `${p.nickname}: ${p.points} ☆\n`;
             tag.classList.add('font');
-            tag.style.color = SNAKE;
-            if (p.id === playerId) {
-                tag.style.color = MY_SNAKE;
-            }
+            tag.style.color = p.color;
             score.appendChild(tag)
 
         });
@@ -75,8 +73,9 @@ const joinGame = document.getElementById('joinGame');
 const leaveGame = document.getElementById('leaveGame');
 joinGame.addEventListener('click', () => {
     nickname = document.getElementById('nickname').value.trim()
+    color = document.getElementById('color').value !== DEFAULT ? document.getElementById('color').value : "random";
     if (nickname && nickname !== '') {
-        socket.emit('joinGame', { nickname }, (session) => {
+        socket.emit('joinGame', { nickname, color }, (session) => {
             playerId = session.id;
         })
         joinGame.disabled = true;

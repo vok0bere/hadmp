@@ -2,6 +2,7 @@ const { Server } = require("socket.io");
 const express = require('express');
 const path = require('path');
 const _ = require('lodash');
+const { GRID_SIZE, FPS } = require('./settings')
 
 // Files //
 const Snake = require('./game/snake');
@@ -41,7 +42,6 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 
 // GAME defaults //
 let genId = 0;
-const GRID_SIZE = 35;
 let players = []
 let apples = []
 let ids = []
@@ -136,11 +136,12 @@ setInterval(() => {
             id: p.id,
             nickname: p.nickname,
             points: p.points,
-            tail: p.tail
+            tail: p.tail,
+            color: p.color,
         })),
         apples: apples.map((a) => ({
             x: a.x,
             y: a.y
         }))
     });
-}, 100);
+}, 1000 / FPS);

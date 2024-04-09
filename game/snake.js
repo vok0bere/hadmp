@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const EventEmitter = require('node:events');
+const { COLOURS } = require('../settings')
 
 const KEYS = {
     up: 38,
@@ -12,6 +13,10 @@ class Snake extends EventEmitter {
     constructor(options) {
         super();
         _.assign(this, options);
+        if (this.color === "random") {
+            const keys = Object.keys(COLOURS);
+            this.color = COLOURS[keys[keys.length * Math.random() << 0]];
+        }
         this.respawn();
     }
 
