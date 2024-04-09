@@ -1,21 +1,18 @@
 {
-  "name": "hadmp",
+  "name": "had_mp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple multiplayer Snake game made in Node.JS using Socket.IO",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node app.js"
   },
-  "author": "",
+  "author": "Vojtěch Kačerovský",
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.9",
-    "ejs-mate": "^4.0.0",
     "express.js": "^1.0.0",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",
-    "method-override": "^3.0.0",
-    "path": "^0.12.7",
     "socket.io": "^4.7.5"
   }
 }
