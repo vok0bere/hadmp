@@ -30,23 +30,32 @@ let genId = 0;
 const GRID_SIZE = 35;
 let players = []
 let apples = []
+let ids = []
 
 // io //
 io.on('connection', (socket) => {
     let player;
-    let id;
+    let id = genId++;
+
+    ids.push(socket.id);
 
     socket.on('joinGame', (options, callback) => {
-        id = genId++;
-        player = new Snake(_.assign({
-            id,
-            dir: 'right',
-            gridSize: GRID_SIZE,
-            snakes: players,
-            apples,
-        }, options));
-        players.push(player);
-        callback({ id: genId });
+        if (players.length <= 9) {
+            player = new Snake(_.assign({
+                id,
+                dir: 'right',
+                gridSize: GRID_SIZE,
+                snakes: players,
+                apples,
+                s_id: socket.id,
+            }, options));
+            players.push(player);
+            callback({ id: id });
+        }
+        else {
+            socket.emit('tooManyPlayers');
+            return;
+        }
     });
 
     socket.on('click', (key) => {
@@ -60,7 +69,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        _.remove(players, player);
+        if (player) {
+            _.remove(players, player);
+        }
+        ids = ids.filter(e => e !== socket.id);
     });
 });
 
@@ -83,7 +95,7 @@ app.all('*', (req, res) => {
 })
 
 const port = process.env.port || 8080;
-server.listen(port, '192.168.22.177', () => console.log(`app running on ${port}`));
+server.listen(port, '10.0.0.10', () => console.log(`app running on ${port}`));
 
 // Main loop
 setInterval(() => {

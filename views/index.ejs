@@ -10,18 +10,18 @@
 
 <body>
     <main>
-        <h1>Had</h1>
+        <h1 class="font">Had</h1>
         <input type="text" name="nickname" id="nickname" placeholder="přezdívka" />
         <section>
-            <button type="submit" id="joinGame" style="display:inline">Připojit se</button>
-            <button type="submit" id="leaveGame" style="display:inline" disabled="true">Odpojit se</button>
+            <button type="submit" id="joinGame" style="display:inline" class="font">připojit se</button>
+            <button type="submit" id="leaveGame" style="display:inline" disabled="true" class="font">odpojit se</button>
         </section>
         <section id="score">
         </section>
         <canvas id="canvas"></canvas>
     </main>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+    <script src="/static/hammer.min.js"></script>
     <script src="/static/index.js"></script>
 </body>
 

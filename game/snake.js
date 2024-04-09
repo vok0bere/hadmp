@@ -47,39 +47,35 @@ class Snake {
                 this.y++; break;
         }
 
-        // Check boundaries
+        // Hranice
         if (this.x > this.gridSize - 1) this.x = 0;
         if (this.x < 0) this.x = this.gridSize - 1;
         if (this.y > this.gridSize - 1) this.y = 0;
         if (this.y < 0) this.y = this.gridSize - 1;
 
-        // Collission detection
         this._checkCollisions();
     }
 
     _checkCollisions() {
-        // With other snakes (including ours)
         this.snakes.forEach((s) => {
-            // Heads except ourself
             if (s !== this) {
                 if (s.x === this.x && s.y === this.y) {
-                    // The bigger survives
-                    // ToDo: 3 outcomes
-                    // - Same length = both die
-                    if (s !== this && this.tail.length < s.tail.length) {
+                    if (this.tail.length < s.tail.length) {
+                        this.respawn();
+                    } else if (this.tail.length === s.tail.length) {
+                        s.respawn();
                         this.respawn();
                     } else {
                         s.respawn();
                     }
                 }
             }
-            // Tails
             s.tail.forEach((t) => {
                 if (t.x === this.x && t.y === this.y) {
-                    // The bigger survives
-                    // ToDo: 3 outcomes
-                    // - Same length = both die
                     if (s !== this && this.tail.length < s.tail.length) {
+                        this.respawn();
+                    } else if (s !== this && this.tail.length === s.tail.length) {
+                        s.respawn();
                         this.respawn();
                     } else {
                         s.respawn();
@@ -87,7 +83,6 @@ class Snake {
                 }
             });
         });
-        // With apples
         this.apples.forEach((a) => {
             if (a.x === this.x && a.y === this.y) {
                 this._addPoint(1);

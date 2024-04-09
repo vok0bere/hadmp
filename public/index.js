@@ -1,7 +1,7 @@
 const BG = "#b0db43"
 const APPLE = "#db2763"
-const SNAKE = "#7CD1D4"
-const MY_SNAKE = "#0e131f"
+const SNAKE = "#0e131f"
+const MY_SNAKE = "#7CD1D4"
 
 const socket = io()
 
@@ -29,6 +29,8 @@ class Game {
         ctx.fillStyle = BG;
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
+        score.innerHTML = "";
+
         players.forEach(p => {
             p.id === playerId ? ctx.fillStyle = MY_SNAKE : ctx.fillStyle = SNAKE;
             ctx.fillRect(p.x * cellSize, p.y * cellSize, cellSize, cellSize)
@@ -36,9 +38,14 @@ class Game {
                 ctx.fillRect(t.x * cellSize, t.y * cellSize, cellSize, cellSize);
             });
 
-            const pTag = document.createElement('span')
-            pTag.innerText = `${p.nickname}: ${p.points}*`
-            score.appendChild(pTag);
+            const tag = document.createElement('span');
+            tag.innerText = `${p.nickname}: ${p.points} ☆\n`;
+            tag.style.color = SNAKE;
+            if (p.id === playerId) {
+                tag.style.color = MY_SNAKE;
+            }
+            score.appendChild(tag)
+
         });
         apples.forEach((a) => {
             ctx.fillStyle = APPLE;
@@ -54,17 +61,24 @@ let nickname;
 const joinGame = document.getElementById('joinGame');
 const leaveGame = document.getElementById('leaveGame');
 joinGame.addEventListener('click', () => {
-    document.getElementById('nickname').ariaValueMax.trim()
+    nickname = document.getElementById('nickname').value.trim()
     if (nickname && nickname !== '') {
         socket.emit('joinGame', { nickname }, (session) => {
             playerId = session.id;
         })
-    }
-    joinGame.disabled = true;
-    leaveGame.disabled = false;
+        joinGame.disabled = true;
+        leaveGame.disabled = false;
+    } else { alert("Chyba ve jméně") }
 })
 leaveGame.addEventListener('click', () => {
     socket.emit('leaveGame');
+    leaveGame.disabled = true;
+    joinGame.disabled = false;
+    document.getElementById(playerId).remove();
+})
+
+socket.on('tooManyPlayers', () => {
+    alert('Momentálně příliš mnoho hráčů!');
     leaveGame.disabled = true;
     joinGame.disabled = false;
 })
