@@ -78,7 +78,8 @@ app.all('*', (req, res) => {
     res.redirect('/')
 })
 
-server.listen(80, () => console.log('app running'));
+const port = process.env.port || 8080;
+server.listen(port, '192.168.22.177', () => console.log(`app running on ${port}`));
 
 // Main loop
 setInterval(() => {
