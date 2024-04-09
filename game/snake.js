@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const EventEmitter = require('node:events');
 
 const KEYS = {
     up: 38,
@@ -7,8 +8,9 @@ const KEYS = {
     left: 37
 };
 
-class Snake {
+class Snake extends EventEmitter {
     constructor(options) {
+        super();
         _.assign(this, options);
         this.respawn();
     }
@@ -61,11 +63,17 @@ class Snake {
             if (s !== this) {
                 if (s.x === this.x && s.y === this.y) {
                     if (this.tail.length < s.tail.length) {
+                        this.emit('collision');
+                        s.emit('win');
                         this.respawn();
                     } else if (this.tail.length === s.tail.length) {
+                        s.emit('collision');
                         s.respawn();
+                        this.emit('collision');
                         this.respawn();
                     } else {
+                        s.emit('collision');
+                        this.emit('win');
                         s.respawn();
                     }
                 }
@@ -73,11 +81,16 @@ class Snake {
             s.tail.forEach((t) => {
                 if (t.x === this.x && t.y === this.y) {
                     if (s !== this && this.tail.length < s.tail.length) {
+                        this.emit('collision');
+                        s.emit('win');
                         this.respawn();
                     } else if (s !== this && this.tail.length === s.tail.length) {
+                        s.emit('collision');
                         s.respawn();
+                        this.emit('collision');
                         this.respawn();
                     } else {
+                        s.emit('collision');
                         s.respawn();
                     }
                 }
@@ -85,6 +98,7 @@ class Snake {
         });
         this.apples.forEach((a) => {
             if (a.x === this.x && a.y === this.y) {
+                this.emit('eat');
                 this._addPoint(1);
                 this._addTail();
                 a.respawn();

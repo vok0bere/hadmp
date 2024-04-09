@@ -1,8 +1,6 @@
 const { Server } = require("socket.io");
 const express = require('express');
 const path = require('path');
-const methodOverride = require('method-override');
-const ejsMate = require('ejs-mate');
 const _ = require('lodash');
 
 // Files //
@@ -12,18 +10,34 @@ const Apple = require('./game/apple');
 // Funkce ke spuštění serveru ?? //
 const app = express();
 const server = require('http').createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    // Optimize WebSocket handshake by enabling compression
+    perMessageDeflate: {
+        zlibDeflateOptions: {
+            // See zlib defaults.
+            chunkSize: 1024,
+            memLevel: 7,
+            level: 3
+        },
+        zlibInflateOptions: {
+            chunkSize: 10 * 1024
+        },
+        // Other options settable:
+        clientNoContextTakeover: true, // Defaults to negotiated value.
+        serverNoContextTakeover: true, // Defaults to negotiated value.
+        serverMaxWindowBits: 10, // Defaults to negotiated value.
+        // Below options specified as default values.
+        concurrencyLimit: 10, // Limits zlib concurrency for perf.
+        threshold: 1024 // Size (in bytes) below which messages
+        // should not be compressed.
+    }
+});
 
 // Middleware //
-app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
+app.use('/howler', express.static(path.join(__dirname, 'node_modules/howler/dist')))
 app.use('/static', express.static(path.join(__dirname, 'public')))
-
-app.use(express.urlencoded({ extended: true }));
-
-app.use(methodOverride('_method'));
 
 // GAME defaults //
 let genId = 0;
@@ -51,6 +65,19 @@ io.on('connection', (socket) => {
             }, options));
             players.push(player);
             callback({ id: id });
+
+            player.on('collision', () => {
+                io.to(player.s_id).emit('playSound', 'collision');
+            })
+
+            player.on('eat', () => {
+                io.to(player.s_id).emit('playSound', 'eat');
+            })
+
+            player.on('win', () => {
+                io.to(player.s_id).emit('playSound', 'win');
+            })
+
         }
         else {
             socket.emit('tooManyPlayers');

@@ -83,6 +83,25 @@ socket.on('tooManyPlayers', () => {
     joinGame.disabled = false;
 })
 
+socket.on('playSound', (sound) => {
+    let soundPath;
+    let volume;
+    switch (sound) {
+        case 'collision':
+            soundPath = '/static/audio/oof.mp3';
+            volume = 3.0;
+            break;
+        case 'eat':
+            soundPath = '/static/audio/yummy.mp3';
+            break;
+        case 'win':
+            soundPath = '/static/audio/tadaa.mp3';
+            break;
+    }
+    const soundEffect = new Howl({ src: [soundPath], volume: [typeof volume !== "undefined" ? volume : 1.0] });
+    soundEffect.play();
+})
+
 let game = new Game(canvas)
 
 const mc = new Hammer.Manager(canvas);
