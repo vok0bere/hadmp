@@ -10,14 +10,15 @@
 
 <body>
     <main>
-        <h1 class="font">Had</h1>
+        <h1 class="font">Had🐍</h1>
         <input type="text" name="nickname" id="nickname" placeholder="přezdívka" />
-        <section>
+        <section class="btns">
             <button type="submit" id="joinGame" style="display:inline" class="font">připojit se</button>
             <button type="submit" id="leaveGame" style="display:inline" disabled="true" class="font">odpojit se</button>
         </section>
         <section id="score">
         </section>
+        <button id="music" onclick="music()">🎺</button>
         <canvas id="canvas"></canvas>
     </main>
     <script src="/socket.io/socket.io.js"></script>

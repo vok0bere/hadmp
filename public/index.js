@@ -3,6 +3,18 @@ const APPLE = "#db2763"
 const SNAKE = "#0e131f"
 const MY_SNAKE = "#7CD1D4"
 
+bg_music = new Howl({ src: '/static/audio/bg.mp3', volume: 0.1, autoplay: true, loop: true })
+
+function music() {
+    if (!bg_music.playing()) {
+        bg_music.play();
+        document.getElementById('music').style.animation = "dance 2s linear infinite"
+    } else {
+        bg_music.pause();
+        document.getElementById('music').style.animation = ""
+    }
+};
+
 const socket = io()
 
 canvas = document.getElementById('canvas')

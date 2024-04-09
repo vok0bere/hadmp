@@ -110,10 +110,63 @@ h1 {
     top: 0;
     left: 0;
     z-index: 20;
+    padding-left: 3%;
+}
+
+#music {
+    position: fixed;
+    top: 2.5%;
+    right: 2.5%;
+    z-index: 20;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    scale: 3;
+}
+
+.btns>button {
+    background-color: #b0db43;
+    background-repeat: no-repeat;
+    border: dotted 1px rgba(70, 78, 50, 1);
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
+.btns>button:disabled {
+    cursor: not-allowed;
+    background-color: rgba(70, 78, 50, 1);
+    border: dotted 1px #b0db43;
 }
 
 .font {
     font-family: "Silkscreen", sans-serif;
     font-weight: 400;
     font-style: normal;
+}
+
+@keyframes dance {
+
+    0% {
+        transform: rotateZ(0) scale(0);
+    }
+
+    25% {
+        transform: rotateZ(-20deg) scaleZ(2);
+    }
+
+    50% {
+        transform: rotateZ(0) scale(0);
+    }
+
+    75% {
+        transform: rotateZ(20deg) scale(2);
+    }
+
+    100% {
+        transform: rotateZ(0) scale(0);
+    }
 }
