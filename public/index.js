@@ -3,7 +3,7 @@ const APPLE = "#db2763"
 const SNAKE = "#0e131f"
 const MY_SNAKE = "#7CD1D4"
 
-bg_music = new Howl({ src: '/static/audio/bg.mp3', volume: 0.1, autoplay: true, loop: true })
+bg_music = new Howl({ src: '/static/audio/bg.mp3', volume: 0.1, loop: true })
 
 function music() {
     if (!bg_music.playing()) {
@@ -52,6 +52,7 @@ class Game {
 
             const tag = document.createElement('span');
             tag.innerText = `${p.nickname}: ${p.points} ☆\n`;
+            tag.classList.add('font');
             tag.style.color = SNAKE;
             if (p.id === playerId) {
                 tag.style.color = MY_SNAKE;
