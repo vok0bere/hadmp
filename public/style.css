@@ -87,7 +87,6 @@ h1 {
 
 #canvas {
     position: absolute;
-    min-width: 30%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -97,4 +96,10 @@ h1 {
 #joinGame {
     display: block;
     margin: 0 auto;
+}
+
+#score {
+    position: fixed;
+    top: 0;
+    left: 0;
 }

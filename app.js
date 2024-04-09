@@ -27,7 +27,7 @@ app.use(methodOverride('_method'));
 
 // GAME defaults //
 let genId = 0;
-const GRID_SIZE = 50;
+const GRID_SIZE = 35;
 let players = []
 let apples = []
 
@@ -53,6 +53,10 @@ io.on('connection', (socket) => {
         if (player) {
             player.changeDirection(key);
         };
+    });
+
+    socket.on('leaveGame', () => {
+        _.remove(players, player)
     });
 
     socket.on('disconnect', () => {
