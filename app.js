@@ -124,9 +124,6 @@ app.all('*', (req, res) => {
     res.redirect('/')
 })
 
-const port = process.env.port || 8080;
-server.listen(port, '192.168.22.177', () => console.log(`app running on ${port}`));
-
 // Main loop
 setInterval(() => {
     players.forEach((p) => {
@@ -148,3 +145,9 @@ setInterval(() => {
         }))
     });
 }, 1000 / FPS);
+
+
+// SERVER //
+const IP_ADDRESS = '192.168.22.177'; // TYPE IN YOUR IP ADRESS -> Win+R cmd -> ipconfig -> your IPv4 address //
+const port = process.env.port || 8080;
+server.listen(port, IP_ADDRESS, () => console.log(`app running on ${port}`));
