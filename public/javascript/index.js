@@ -4,7 +4,7 @@ const SNAKE = "#0e131f"
 const MY_SNAKE = "#7CD1D4"
 const DEFAULT = "#464e32";
 
-bg_music = new Howl({ src: '/static/audio/bg.mp3', volume: 0.3, loop: true })
+bg_music = new Howl({ src: '/audio/bg.mp3', volume: 0.3, loop: true })
 
 function music() {
     if (!bg_music.playing()) {
@@ -100,14 +100,14 @@ socket.on('playSound', (sound) => {
     let volume;
     switch (sound) {
         case 'collision':
-            soundPath = '/static/audio/oof.mp3';
+            soundPath = '/audio/oof.mp3';
             volume = 3.0;
             break;
         case 'eat':
-            soundPath = '/static/audio/yummy.mp3';
+            soundPath = '/audio/yummy.mp3';
             break;
         case 'win':
-            soundPath = '/static/audio/tadaa.mp3';
+            soundPath = '/audio/tadaa.mp3';
             break;
     }
     const soundEffect = new Howl({ src: [soundPath], volume: [typeof volume !== "undefined" ? volume : 1.0] });

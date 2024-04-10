@@ -41,7 +41,7 @@ app.use('/howler', express.static(path.join(__dirname, 'node_modules/howler/dist
 app.use('/javascript', express.static(path.join(__dirname, 'public/javascript')))
 app.use('/styles', express.static(path.join(__dirname, 'public/styles')))
 app.use('/images', express.static(path.join(__dirname, 'public/img')))
-
+app.use('/audio', express.static(path.join(__dirname, 'public/audio')))
 
 // GAME defaults //
 let genId = 0;
