@@ -2,7 +2,7 @@ const { Server } = require("socket.io");
 const express = require('express');
 const path = require('path');
 const _ = require('lodash');
-const { GRID_SIZE, FPS, COLOURS } = require('./settings')
+const { GRID_SIZE, FPS, COLOURS } = require('./game/settings')
 
 // Files //
 const Snake = require('./game/snake');
@@ -38,7 +38,10 @@ const io = new Server(server, {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use('/howler', express.static(path.join(__dirname, 'node_modules/howler/dist')))
-app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use('/javascript', express.static(path.join(__dirname, 'public/javascript')))
+app.use('/styles', express.static(path.join(__dirname, 'public/styles')))
+app.use('/images', express.static(path.join(__dirname, 'public/img')))
+
 
 // GAME defaults //
 let genId = 0;

@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const EventEmitter = require('node:events');
-const { COLOURS, KEYS } = require('../settings')
+const { COLOURS, KEYS } = require('./settings')
 
 let colors = {};
 colors = _.assign(colors, COLOURS);
@@ -15,11 +15,8 @@ class Snake extends EventEmitter {
         _.assign(this, options);
         if (this.color === "random") {
             function random() {
-                console.log("1")
                 const available = Object.values(colors).filter(i => !i.used);
-                console.log(available)
                 const random = available[Math.floor(Math.random() * available.length)];
-                console.log(random)
                 if (random) { random.used = true; return Object.values(random)[0]; };
             }
             this.color = random();
