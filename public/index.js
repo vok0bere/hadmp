@@ -4,7 +4,7 @@ const SNAKE = "#0e131f"
 const MY_SNAKE = "#7CD1D4"
 const DEFAULT = "#464e32";
 
-bg_music = new Howl({ src: '/static/audio/bg.mp3', volume: 0.1, loop: true })
+bg_music = new Howl({ src: '/static/audio/bg.mp3', volume: 0.3, loop: true })
 
 function music() {
     if (!bg_music.playing()) {
@@ -116,7 +116,8 @@ socket.on('playSound', (sound) => {
 
 let game = new Game(canvas)
 
-const mc = new Hammer.Manager(canvas);
+const body = document.getElementById('main');
+const mc = new Hammer.Manager(body);
 const Swipe = new Hammer.Swipe();
 mc.add(Swipe);
 mc.on("swipe", (e) => {

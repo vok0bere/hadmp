@@ -1,21 +1,28 @@
 const _ = require('lodash');
 const EventEmitter = require('node:events');
-const { COLOURS } = require('../settings')
+const { COLOURS, KEYS } = require('../settings')
 
-const KEYS = {
-    up: 38,
-    right: 39,
-    down: 40,
-    left: 37
-};
+let colors = {};
+colors = _.assign(colors, COLOURS);
+colors = Object.entries(colors).map(([key, value]) => ({
+    [key]: value,
+    used: false
+}));
 
 class Snake extends EventEmitter {
     constructor(options) {
         super();
         _.assign(this, options);
         if (this.color === "random") {
-            const keys = Object.keys(COLOURS);
-            this.color = COLOURS[keys[keys.length * Math.random() << 0]];
+            function random() {
+                console.log("1")
+                const available = Object.values(colors).filter(i => !i.used);
+                console.log(available)
+                const random = available[Math.floor(Math.random() * available.length)];
+                console.log(random)
+                if (random) { random.used = true; return Object.values(random)[0]; };
+            }
+            this.color = random();
         }
         this.respawn();
     }
@@ -65,7 +72,7 @@ class Snake extends EventEmitter {
 
     _checkCollisions() {
         this.snakes.forEach((s) => {
-            if (s !== this) {
+            if (s !== this) { //head collision
                 if (s.x === this.x && s.y === this.y) {
                     if (this.tail.length < s.tail.length) {
                         this.emit('collision');
@@ -83,17 +90,17 @@ class Snake extends EventEmitter {
                     }
                 }
             }
-            s.tail.forEach((t) => {
+            s.tail.forEach((t) => { //tail collisions
                 if (t.x === this.x && t.y === this.y) {
-                    if (s !== this && this.tail.length < s.tail.length) {
+                    if (s !== this) {
                         this.emit('collision');
                         s.emit('win');
                         this.respawn();
-                    } else if (s !== this && this.tail.length === s.tail.length) {
-                        s.emit('collision');
-                        s.respawn();
-                        this.emit('collision');
-                        this.respawn();
+                        // } else if (s !== this && this.tail.length === s.tail.length) {
+                        //     s.emit('collision');
+                        //     s.respawn();
+                        //     this.emit('collision');
+                        //     this.respawn();
                     } else {
                         s.emit('collision');
                         s.respawn();

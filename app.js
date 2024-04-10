@@ -2,7 +2,7 @@ const { Server } = require("socket.io");
 const express = require('express');
 const path = require('path');
 const _ = require('lodash');
-const { GRID_SIZE, FPS } = require('./settings')
+const { GRID_SIZE, FPS, COLOURS } = require('./settings')
 
 // Files //
 const Snake = require('./game/snake');
@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
 });
 
 // foods //
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 4; i++) {
     apples.push(new Apple({
         gridSize: GRID_SIZE,
         snakes: players,
@@ -122,7 +122,7 @@ app.all('*', (req, res) => {
 })
 
 const port = process.env.port || 8080;
-server.listen(port, '10.0.0.10', () => console.log(`app running on ${port}`));
+server.listen(port, '192.168.22.177', () => console.log(`app running on ${port}`));
 
 // Main loop
 setInterval(() => {

@@ -80,8 +80,8 @@ select {
 }
 
 /* actual styling:d */
-html {
-    overflow-y: hidden;
+body {
+    overflow: hidden;
 }
 
 main {
@@ -198,6 +198,7 @@ input[type=text] {
     color: black;
     text-align: center;
     margin-bottom: .5em;
+    margin-right: .5em;
 }
 
 input[type=color] {
@@ -208,6 +209,7 @@ input[type=color] {
     border: .2em solid #b0db43;
     width: 2em;
     height: 2em;
+    margin-bottom: .5em;
 
     &::-webkit-color-swatch {
         border: none;
