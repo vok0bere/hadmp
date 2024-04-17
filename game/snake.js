@@ -1,10 +1,9 @@
-const _ = require('lodash');
 const EventEmitter = require('node:events');
 const { COLOURS, KEYS } = require('./settings')
 
 // load random colors and parse them into right format //
 let colors = {};
-colors = _.assign(colors, COLOURS);
+colors = Object.assign(colors, COLOURS);
 colors = Object.entries(colors).map(([key, value]) => ({
     [key]: value,
     used: false
@@ -14,7 +13,7 @@ colors = Object.entries(colors).map(([key, value]) => ({
 class Snake extends EventEmitter {
     constructor(options) {
         super(); // polymorphism
-        _.assign(this, options); // unpack all args from user + default args into this Snake instance
+        Object.assign(this, options); // unpack all args from user + default args into this Snake instance
         if (this.color === "random") { // determine what color the snake should be
             function random() {
                 const available = Object.values(colors).filter(i => !i.used);

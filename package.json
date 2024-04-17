@@ -9,7 +9,6 @@
   "author": "Vojtěch Kačerovský",
   "license": "ISC",
   "dependencies": {
-    "ejs": "^3.1.9",
     "express.js": "^1.0.0",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",

@@ -1,7 +1,7 @@
+// Import potřebných knihoven //
 const { Server } = require("socket.io");
 const express = require('express');
-const path = require('path');
-const _ = require('lodash');
+const path = require('node:path');
 
 // Files //
 const { GRID_SIZE, FPS, APPLE_COUNT, IP_ADDRESS, MAX_PLAYERS } = require('./game/settings');
@@ -11,7 +11,7 @@ const Apple = require('./game/apple');
 // Funkce ke spuštění serveru //
 const app = express();
 const server = require('http').createServer(app);
-const io = new Server(server, {
+const io = new Server(server, { // MDN code, no idea whether it does anything :dd //
     // Optimize WebSocket handshake by enabling compression
     perMessageDeflate: {
         zlibDeflateOptions: {
@@ -34,7 +34,7 @@ const io = new Server(server, {
     }
 });
 
-// Middleware //
+// Serving static files //
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/howler', express.static(path.join(__dirname, 'node_modules/howler/dist')))
 app.use('/javascript', express.static(path.join(__dirname, 'public/javascript')))
@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
 
     socket.on('joinGame', (options, callback) => {
         if (players.length <= MAX_PLAYERS - 1) {
-            player = new Snake(_.assign({
+            player = new Snake(Object.assign({
                 id,
                 dir: 'right',
                 gridSize: GRID_SIZE,
@@ -94,14 +94,14 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leaveGame', () => {
-        _.remove(players, player)
+        players = players.filter(e => e !== player); // smazání hráče z arr hráčů
     });
 
     socket.on('disconnect', () => {
         if (player) {
-            _.remove(players, player);
+            players = players.filter(e => e !== player); // smazání hráče z arr hráčů
         }
-        ids = ids.filter(e => e !== socket.id);
+        ids = ids.filter(e => e !== socket.id); // smazání socketu hráče z arr socketů
     });
 });
 
@@ -128,7 +128,7 @@ setInterval(() => {
     players.forEach((p) => {
         p.move();
     });
-    io.emit('state', {
+    io.emit('state', { // odpověď frontendu s aktualizovaným stavem hry
         players: players.map((p) => ({
             x: p.x,
             y: p.y,

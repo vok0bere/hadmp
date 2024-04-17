@@ -1,8 +1,6 @@
-const _ = require('lodash');
-
 class Apple {
   constructor(options) {
-    _.assign(this, options);
+    Object.assign(this, options);
     this.respawn();
   }
 
