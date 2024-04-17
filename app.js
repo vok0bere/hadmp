@@ -50,6 +50,8 @@ let ids = []
 
 // io //
 io.on('connection', (socket) => {
+    console.log('Connection established.');
+
     let player;
     let id = genId++;
 
@@ -98,6 +100,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
+        console.log('Connection terminated.');
         if (player) {
             players = players.filter(e => e !== player); // smazání hráče z arr hráčů
         }
