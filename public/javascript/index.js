@@ -1,9 +1,11 @@
+// define color pallet //
 const BG = "#b0db43"
 const APPLE = "#db2763"
 const SNAKE = "#0e131f"
 const MY_SNAKE = "#7CD1D4"
 const DEFAULT = "#464e32";
 
+// Background music //
 bg_music = new Howl({ src: '/audio/bg.mp3', volume: 0.3, loop: true })
 
 function music() {
@@ -16,11 +18,14 @@ function music() {
     }
 };
 
+
 const socket = io()
 
+// Game class //
 canvas = document.getElementById('canvas')
 const score = document.getElementById('score');
 class Game {
+    // set up canvas //
     constructor(canvas) {
         this.canvas = canvas;
         this.canvas.width = this.canvas.height;
@@ -35,6 +40,7 @@ class Game {
         this.gridSize = 35;
         this.cellSize = this.canvas.style.width.replace("px", "") / this.gridSize;
     }
+    // redraw the game for each emitted state //
     draw(players, apples) {
         const ctx = this.ctx;
         const cellSize = this.cellSize;
@@ -44,6 +50,7 @@ class Game {
 
         score.innerHTML = "";
 
+        // draw snakes //
         players.forEach(p => {
             ctx.fillStyle = p.color;
             ctx.fillRect(p.x * cellSize, p.y * cellSize, cellSize, cellSize)
@@ -51,6 +58,7 @@ class Game {
                 ctx.fillRect(t.x * cellSize, t.y * cellSize, cellSize, cellSize);
             });
 
+            // set up scoreboard //
             const tag = document.createElement('span');
             tag.innerText = `${p.nickname}: ${p.points} ☆\n`;
             tag.classList.add('font');
@@ -58,6 +66,8 @@ class Game {
             score.appendChild(tag)
 
         });
+
+        // draw apples //
         apples.forEach((a) => {
             ctx.fillStyle = APPLE;
             ctx.fillRect(a.x * cellSize, a.y * cellSize, cellSize, cellSize);
@@ -65,23 +75,27 @@ class Game {
     }
 }
 
-
+// listen for user events //
 let playerId;
 let nickname;
 
 const joinGame = document.getElementById('joinGame');
 const leaveGame = document.getElementById('leaveGame');
+
+// join game btn reaction //
 joinGame.addEventListener('click', () => {
-    nickname = document.getElementById('nickname').value.trim()
-    color = document.getElementById('color').value !== DEFAULT ? document.getElementById('color').value : "random";
+    nickname = document.getElementById('nickname').value.trim() // parse nickname
+    color = document.getElementById('color').value !== DEFAULT ? document.getElementById('color').value : "random"; // parse color val, if none set value to "random"
     if (nickname && nickname !== '') {
         socket.emit('joinGame', { nickname, color }, (session) => {
-            playerId = session.id;
+            playerId = session.id; // set global var playerId to session.id
         })
         joinGame.disabled = true;
         leaveGame.disabled = false;
     } else { alert("Chyba ve jméně") }
 })
+
+// leave game btn reaction //
 leaveGame.addEventListener('click', () => {
     socket.emit('leaveGame');
     leaveGame.disabled = true;
@@ -89,16 +103,18 @@ leaveGame.addEventListener('click', () => {
     document.getElementById(playerId).remove();
 })
 
+// handling too many players //
 socket.on('tooManyPlayers', () => {
     alert('Momentálně příliš mnoho hráčů!');
     leaveGame.disabled = true;
     joinGame.disabled = false;
 })
 
+// handling sound effects //
 socket.on('playSound', (sound) => {
     let soundPath;
     let volume;
-    switch (sound) {
+    switch (sound) { // determine which sound should be played
         case 'collision':
             soundPath = '/audio/oof.mp3';
             volume = 3.0;
@@ -114,15 +130,16 @@ socket.on('playSound', (sound) => {
     soundEffect.play();
 })
 
-let game = new Game(canvas)
+let game = new Game(canvas) // set up the game
 
+// listening for user gestures (phone support) //
 const body = document.getElementById('main');
 const mc = new Hammer.Manager(body);
 const Swipe = new Hammer.Swipe();
-mc.add(Swipe);
+mc.add(Swipe); // listen for swipe and its direction on entire page
 mc.on("swipe", (e) => {
     dir = e.offsetDirection;
-    switch (dir) {
+    switch (dir) { // determine what direction was the gesture
         case 2:
             socket.emit('click', 37); break;
         case 4:
@@ -134,10 +151,12 @@ mc.on("swipe", (e) => {
     }
 })
 
+// listen for keyboard triggers //
 document.onkeydown = (e) => {
     socket.emit('click', e.keyCode);
 }
 
+// redrawing the game //
 socket.on('state', (data) => {
     game.draw(data.players, data.apples);
 })

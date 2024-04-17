@@ -19,4 +19,7 @@ module.exports = {
         down: 40,
         left: 37
     },
+    APPLE_COUNT: 4,
+    MAX_PLAYERS: 10,
+    IP_ADDRESS: undefined, // TYPE IN YOUR IP ADRESS -> Win+R cmd -> ipconfig -> your IPv4 address //
 }

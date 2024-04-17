@@ -2,13 +2,13 @@ const { Server } = require("socket.io");
 const express = require('express');
 const path = require('path');
 const _ = require('lodash');
-const { GRID_SIZE, FPS, COLOURS } = require('./game/settings')
 
 // Files //
+const { GRID_SIZE, FPS, APPLE_COUNT, IP_ADDRESS, MAX_PLAYERS } = require('./game/settings');
 const Snake = require('./game/snake');
 const Apple = require('./game/apple');
 
-// Funkce ke spuštění serveru ?? //
+// Funkce ke spuštění serveru //
 const app = express();
 const server = require('http').createServer(app);
 const io = new Server(server, {
@@ -35,8 +35,7 @@ const io = new Server(server, {
 });
 
 // Middleware //
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/howler', express.static(path.join(__dirname, 'node_modules/howler/dist')))
 app.use('/javascript', express.static(path.join(__dirname, 'public/javascript')))
 app.use('/styles', express.static(path.join(__dirname, 'public/styles')))
@@ -57,7 +56,7 @@ io.on('connection', (socket) => {
     ids.push(socket.id);
 
     socket.on('joinGame', (options, callback) => {
-        if (players.length <= 9) {
+        if (players.length <= MAX_PLAYERS - 1) {
             player = new Snake(_.assign({
                 id,
                 dir: 'right',
@@ -107,7 +106,7 @@ io.on('connection', (socket) => {
 });
 
 // foods //
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < APPLE_COUNT; i++) {
     apples.push(new Apple({
         gridSize: GRID_SIZE,
         snakes: players,
@@ -117,7 +116,7 @@ for (let i = 0; i < 4; i++) {
 
 // Routing //
 app.get('/', (req, res) => {
-    res.render('index');
+    res.sendFile('index.html');
 });
 
 app.all('*', (req, res) => {
@@ -148,6 +147,5 @@ setInterval(() => {
 
 
 // SERVER //
-const IP_ADDRESS = '192.168.22.177'; // TYPE IN YOUR IP ADRESS -> Win+R cmd -> ipconfig -> your IPv4 address //
 const port = process.env.port || 8080;
 server.listen(port, IP_ADDRESS, () => console.log(`app running on ${port}`));
